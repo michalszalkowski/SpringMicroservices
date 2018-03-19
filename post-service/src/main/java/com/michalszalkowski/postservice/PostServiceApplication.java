@@ -21,22 +21,22 @@ import java.util.stream.Stream;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-public class ArticleServiceApplication {
+public class PostServiceApplication {
 
 	@Bean
-	CommandLineRunner commandLineRunner(ArticleRepository articleRepository) {
+	CommandLineRunner commandLineRunner(PostRepository postRepository) {
 		return strings -> {
-			Stream.of("Lorem 1", "Lorem  2", "Lorem 3").forEach(title -> articleRepository.save(new Article(title)));
+			Stream.of("Lorem 1", "Lorem  2", "Lorem 3").forEach(title -> postRepository.save(new Post(title)));
 		};
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(ArticleServiceApplication.class, args);
+		SpringApplication.run(PostServiceApplication.class, args);
 	}
 }
 
 @Entity
-class Article {
+class Post {
 
 	@Id
 	@GeneratedValue
@@ -44,10 +44,10 @@ class Article {
 
 	private String title;
 
-	public Article() {
+	public Post() {
 	}
 
-	public Article(String title) {
+	public Post(String title) {
 		this.title = title;
 	}
 
@@ -57,19 +57,8 @@ class Article {
 }
 
 @RepositoryRestResource
-interface ArticleRepository extends JpaRepository<Article, Long> {
+interface PostRepository extends JpaRepository<Post, Long> {
 
 	@RestResource(path = "by-title")
-	Collection<Article> findByTitle(@Param("title") String title);
-}
-
-@RestController
-class MessageRestController {
-	@Value("${message.test}")
-	private String message;
-
-	@RequestMapping("/message")
-	public String message() {
-		return this.message;
-	}
+	Collection<Post> findByTitle(@Param("title") String title);
 }
